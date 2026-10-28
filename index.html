@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f5f1eb" />
+    <meta name="description" content="Tatuagens autorais de Hemily Christie. Fine line, composições florais e ornamentais feitas a partir da sua história." />
+    <meta property="og:title" content="Hemily Christie Tattoo — uma história sua, uma arte na pele" />
+    <meta property="og:description" content="Um portfólio de tatuagens autorais, pensadas com cuidado para acompanhar a sua história." />
+    <meta property="og:type" content="website" />
+    <title>Hemily Christie Tattoo — Uma história sua, uma arte na pele</title>
+    <link rel="icon" href="data:," />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="interactions.css" />
+  </head>
+  <body id="topo">
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+    <header class="site-header">
+      <a class="wordmark" href="#topo" aria-label="Hemily Christie Tattoo, início">
+        <span>Hemily Christie</span><small>TATTOO</small>
+      </a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Abrir menu"><span></span><span></span></button>
+      <nav id="site-nav" class="site-nav" aria-label="Navegação principal">
+        <a href="#portfolio">Portfólio</a><a href="#sobre">Sobre</a><a href="#processo">Processo</a><a href="#duvidas">Dúvidas</a><a class="nav-cta" href="#contato">Conversar</a>
+      </nav>
+    </header>
+
+    <main id="conteudo">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="hero-kicker"><span class="kicker-mark"></span> Tatuagem autoral</p>
+          <h1 id="hero-title">Uma história sua.<br /><em>Uma arte na pele.</em></h1>
+          <p class="hero-intro">Ideias, símbolos e sentimentos encontram forma em uma tatuagem pensada para acompanhar você.</p>
+          <div class="hero-actions"><a class="button button-dark" href="#contato">Conversar sobre uma ideia <span aria-hidden="true">↗</span></a><a class="text-link" href="#portfolio">Explorar trabalhos <span aria-hidden="true">↓</span></a></div>
+          <div class="hero-caption"><span>TRAÇO · FORMA · SIGNIFICADO</span><span class="caption-rule"></span><span>PORTFÓLIO AUTORAL</span></div>
+        </div>
+        <figure class="hero-art">
+          <div class="hero-frame"><img src="public/images/portfolio/composicao-floral.webp" alt="Composição floral em traço fino, fotografada de perto" width="1536" height="864" fetchpriority="high" /></div>
+          <figcaption><span>Uma ideia, muitos caminhos.</span><span>Trabalho autoral</span></figcaption>
+          <span class="hero-side-note" aria-hidden="true">HEMILY CHRISTIE · TATTOO</span>
+        </figure>
+      </section>
+
+      <section class="manifesto section-light" aria-labelledby="manifesto-title">
+        <div class="section-marker"><span>H</span><span class="marker-line"></span><span>01</span></div>
+        <div class="manifesto-copy"><p class="eyebrow">O que fica com você</p><h2 id="manifesto-title">Mais do que um desenho,<br /><em>uma forma de se expressar.</em></h2></div>
+        <p class="manifesto-aside">Cada traço começa com uma conversa. O significado é seu; a composição, feita para contar essa história na pele.</p>
+      </section>
+
+      <section class="portfolio" id="portfolio" aria-labelledby="portfolio-title">
+        <div class="section-heading heading-inverse"><div><p class="eyebrow">Um recorte do meu trabalho</p><h2 id="portfolio-title">Feitas para <em>ficar.</em></h2></div><p>Peças autorais que partem de referências, memórias e pequenos detalhes.</p></div>
+        <div class="filters" role="group" aria-label="Filtrar trabalhos por estilo">
+          <button class="filter-button is-active" type="button" data-filter="all" aria-pressed="true">Todos</button>
+          <button class="filter-button" type="button" data-filter="floral" aria-pressed="false">Floral</button>
+          <button class="filter-button" type="button" data-filter="ornamental" aria-pressed="false">Ornamental</button>
+          <button class="filter-button" type="button" data-filter="ilustrativa" aria-pressed="false">Ilustrativa</button>
+          <button class="filter-button" type="button" data-filter="delicada" aria-pressed="false">Delicada</button>
+          <button class="filter-button" type="button" data-filter="lettering" aria-pressed="false">Lettering</button>
+        </div>
+        <div class="portfolio-tools"><p class="gallery-note" id="gallery-count" aria-live="polite"></p><button class="collection-toggle" id="collection-toggle" type="button" aria-expanded="false" aria-controls="saved-collection">Minha coleção <span id="saved-count">0</span></button></div>
+        <div class="gallery" id="gallery" aria-label="Trabalhos de Hemily Christie"></div>
+        <p class="gallery-empty" id="gallery-empty" hidden>Nenhum trabalho nesta categoria. Escolha outro filtro para continuar.</p>
+        <section class="saved-collection" id="saved-collection" aria-labelledby="saved-title" hidden>
+          <div class="saved-heading"><div><p class="eyebrow">Referências que você guardou</p><h3 id="saved-title">Minha coleção</h3></div><button class="collection-close" id="collection-close" type="button">Fechar coleção</button></div>
+          <p class="collection-empty" id="collection-empty">Você ainda não salvou nenhum trabalho. Use “Salvar” em uma peça para guardá-la aqui.</p>
+          <div class="gallery saved-gallery" id="saved-gallery" aria-label="Trabalhos salvos"></div>
+          <p class="storage-note" id="storage-note" role="status" aria-live="polite"></p>
+        </section>
+        <p class="gallery-note gallery-instruction">Selecione uma peça para ampliar ou salvar na sua coleção.</p>
+      </section>
+
+      <section class="styles section-light" aria-labelledby="styles-title">
+        <div class="section-heading"><div><p class="eyebrow">Linguagens que se encontram</p><h2 id="styles-title">Um traço para <em>cada ideia.</em></h2></div><p>O ponto de partida é o que você quer levar consigo. A forma nasce desse encontro.</p></div>
+        <div class="style-list">
+          <article class="style-row"><span class="style-index">A</span><div><h3>Floral e botânica</h3><p>Formas orgânicas, pétalas e composições que acompanham o corpo.</p></div><a href="#portfolio" aria-label="Ver trabalhos florais"><img src="public/images/portfolio/composicao-floral.webp" alt="Detalhe de tatuagem floral" width="1536" height="864" loading="lazy" /><span aria-hidden="true">↗</span></a></article>
+          <article class="style-row"><span class="style-index">B</span><div><h3>Ornamental</h3><p>Geometria, símbolos e linhas que se organizam em uma composição única.</p></div><a href="#portfolio" aria-label="Ver trabalhos ornamentais"><img src="public/images/portfolio/figura-ornamental.webp" alt="Detalhe de tatuagem ornamental" width="1152" height="1536" loading="lazy" /><span aria-hidden="true">↗</span></a></article>
+          <article class="style-row"><span class="style-index">C</span><div><h3>Ilustrativa</h3><p>Personagens, animais e referências transformados em imagem na pele.</p></div><a href="#portfolio" aria-label="Ver trabalhos ilustrativos"><img src="public/images/portfolio/lobo-flores.webp" alt="Detalhe de tatuagem ilustrativa de lobo" width="1152" height="1536" loading="lazy" /><span aria-hidden="true">↗</span></a></article>
+          <article class="style-row"><span class="style-index">D</span><div><h3>Traços delicados</h3><p>Pequenos símbolos e palavras com espaço para respirar.</p></div><a href="#portfolio" aria-label="Ver trabalhos delicados"><img src="public/images/portfolio/no-ordinary-love.webp" alt="Detalhe de lettering delicado" width="1152" height="1536" loading="lazy" /><span aria-hidden="true">↗</span></a></article>
+        </div>
+      </section>
+
+      <section class="about" id="sobre" aria-labelledby="about-title">
+        <div class="about-art"><img src="public/images/portfolio/detalhe-ornamental.webp" alt="Detalhe de linhas geométricas e escrita em uma tatuagem" width="1152" height="1536" loading="lazy" /><span class="about-stamp">feito com<br /><em>intenção</em></span></div>
+        <div class="about-copy"><p class="eyebrow">Um espaço para a sua ideia</p><h2 id="about-title">A arte de transformar<br /><em>ideias em traços.</em></h2><p>Cada tatuagem começa com uma ideia. Meu trabalho é explorar essa ideia com cuidado, entender o que ela representa para você e transformar referências e significados em uma composição que faça sentido na sua pele.</p><p class="about-signature">Hemily Christie <span>Tatuadora</span></p></div>
+      </section>
+
+      <section class="process section-light" id="processo" aria-labelledby="process-title">
+        <div class="section-heading"><div><p class="eyebrow">Do primeiro contato à sessão</p><h2 id="process-title">Vamos por <em>etapas.</em></h2></div><p>Você não precisa chegar com tudo decidido. A conversa ajuda a organizar a ideia.</p></div>
+        <ol class="process-steps"><li><span class="step-number">01</span><div><h3>Ideia e referências</h3><p>Conte o que imaginou, onde gostaria de tatuar e o tamanho aproximado. Uma referência ajuda, mas não precisa estar pronta.</p></div></li><li><span class="step-number">02</span><div><h3>Alinhamento da proposta</h3><p>Conversamos sobre a composição e os detalhes necessários para que a ideia funcione na pele.</p></div></li><li><span class="step-number">03</span><div><h3>Agendamento e sessão</h3><p>Com a proposta alinhada, você recebe as informações para combinar o atendimento.</p></div></li></ol>
+      </section>
+
+      <section class="care" aria-labelledby="care-title"><div class="care-ornament" aria-hidden="true">✳</div><div><p class="eyebrow">Com atenção em cada etapa</p><h2 id="care-title">Uma experiência<br /><em>cuidadosa e tranquila.</em></h2></div><p>A sua ideia merece tempo e escuta. Por isso, cada atendimento começa com uma conversa clara sobre a proposta e os próximos passos.</p><a class="light-link" href="#duvidas">Entenda como funciona <span aria-hidden="true">↗</span></a></section>
+
+      <section class="faq section-light" id="duvidas" aria-labelledby="faq-title"><div class="faq-intro"><p class="eyebrow">Antes de começar</p><h2 id="faq-title">Dúvidas que<br /><em>podem surgir.</em></h2><p>Se ainda faltar alguma resposta, podemos conversar sobre a sua ideia.</p></div><div class="faq-list">
+        <details><summary>Como faço para pedir um orçamento?<span aria-hidden="true"></span></summary><p>Conte a ideia, o local do corpo e o tamanho aproximado pelo formulário. A conversa ajuda a entender os detalhes da proposta.</p></details>
+        <details><summary>Posso enviar referências?<span aria-hidden="true"></span></summary><p>Sim. Você pode compartilhar imagens que ajudem a explicar o que imaginou. Elas servem como ponto de partida para uma criação autoral.</p></details>
+        <details><summary>Como escolho o local e o tamanho?<span aria-hidden="true"></span></summary><p>Se ainda não souber, tudo bem. Podemos conversar sobre a ideia e pensar na composição em conjunto.</p></details>
+        <details><summary>Como funciona o agendamento?<span aria-hidden="true"></span></summary><p>Depois de alinhar a proposta, combinamos os próximos passos e a data do atendimento diretamente.</p></details>
+        <details><summary>Como me preparo para a sessão?<span aria-hidden="true"></span></summary><p>As orientações de preparação são compartilhadas antes do atendimento, de acordo com a proposta conversada.</p></details>
+        <details><summary>Como recebo os cuidados posteriores?<span aria-hidden="true"></span></summary><p>As orientações para depois da sessão são passadas no atendimento para que você saiba como cuidar da tatuagem.</p></details>
+      </div></section>
+
+      <section class="contact" id="contato" aria-labelledby="contact-title"><div class="contact-image"><img src="public/images/portfolio/lobo-flores.webp" alt="Detalhe de uma tatuagem de lobo com flores" width="1152" height="1536" loading="lazy" /><span class="contact-image-caption">Um desenho seu, feito para você.</span></div><div class="contact-content"><p class="eyebrow">Uma conversa pode começar aqui</p><h2 id="contact-title">Sua próxima tattoo<br /><em>começa com uma ideia.</em></h2><p>Conte um pouco do que está imaginando. A gente conversa sobre os detalhes, sem pressa.</p>
+        <form id="booking-form" novalidate>
+          <ol class="form-progress" aria-label="Etapas do pedido">
+            <li aria-current="step"><span>1</span><span>Contato</span></li><li><span>2</span><span>Ideia</span></li><li><span>3</span><span>Revisão</span></li>
+          </ol>
+          <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+          <fieldset class="form-step" data-step="0">
+            <legend>Como podemos falar com você?</legend>
+            <div class="form-grid"><label>Seu nome<input name="name" autocomplete="name" required placeholder="Como podemos chamar você?" /></label><label>Telefone para contato<input name="phone" type="tel" autocomplete="tel" required placeholder="(00) 00000-0000" /></label></div>
+            <button class="button button-light step-next" type="button">Continuar com a ideia</button>
+          </fieldset>
+          <fieldset class="form-step" data-step="1" hidden>
+            <legend>Conte um pouco do que imaginou.</legend>
+            <div class="form-grid"><label class="form-wide">Sua ideia<textarea name="idea" rows="3" required placeholder="O que você gostaria de tatuar?"></textarea></label><label>Local do corpo<input name="bodyLocation" placeholder="Ex.: braço, costela" /></label><label>Tamanho aproximado<input name="size" placeholder="Ex.: 8 cm" /></label><label>Estilo ou referência<input name="style" placeholder="Ex.: floral, lettering" /></label><label>Data de preferência <small>(opcional)</small><input name="date" type="date" /></label></div>
+            <div class="form-step-actions"><button class="button button-quiet step-back" type="button">Voltar</button><button class="button button-light step-next" type="button">Revisar pedido</button></div>
+          </fieldset>
+          <fieldset class="form-step" data-step="2" hidden>
+            <legend>Revise antes de abrir o WhatsApp.</legend>
+            <dl class="request-summary" id="request-summary"></dl>
+            <div class="form-step-actions"><button class="button button-quiet step-back" type="button">Voltar e editar</button><button class="button button-light" type="submit">Abrir WhatsApp para enviar <span aria-hidden="true">↗</span></button></div>
+            <a class="whatsapp-fallback" id="whatsapp-fallback" target="_blank" rel="noopener noreferrer" hidden>Abrir a conversa no WhatsApp</a>
+          </fieldset>
+          <p class="form-help" id="form-help">Você revisará a mensagem no WhatsApp antes de enviá-la. O pedido não confirma um agendamento.</p>
+        </form>
+      </div></section>
+
+      <section class="location section-light" aria-labelledby="location-title"><div><p class="eyebrow">Atendimento presencial</p><h2 id="location-title">Vamos combinar<br /><em>o encontro.</em></h2></div><p>O endereço e a localização são compartilhados durante a conversa de agendamento.</p><a class="text-link" href="#contato">Perguntar sobre localização <span aria-hidden="true">↗</span></a></section>
+    </main>
+
+    <footer class="site-footer"><div class="footer-brand"><a class="wordmark wordmark-footer" href="#topo"><span>Hemily Christie</span><small>TATTOO</small></a><p>Uma história sua.<br /><em>Uma arte na pele.</em></p></div><nav class="footer-nav" aria-label="Links do rodapé"><a href="#portfolio">Portfólio</a><a href="#sobre">Sobre</a><a href="#processo">Processo</a><a href="#duvidas">Dúvidas</a></nav><a class="footer-contact" href="#contato">Vamos conversar <span aria-hidden="true">↗</span></a><div class="footer-bottom"><span>© <span id="year"></span> Hemily Christie Tattoo</span><span>Uma história sua, uma arte na pele.</span><a href="#topo">Voltar ao início ↑</a></div></footer>
+
+    <dialog class="lightbox" id="lightbox" aria-label="Visualização ampliada da tatuagem"><button class="lightbox-close" type="button" aria-label="Fechar imagem">×</button><button class="lightbox-prev" type="button" aria-label="Imagem anterior">Imagem anterior</button><figure><img id="lightbox-image" alt="" width="1152" height="1536" /><figcaption id="lightbox-caption"></figcaption><p id="lightbox-description"></p></figure><button class="lightbox-next" type="button" aria-label="Próxima imagem">Próxima imagem</button><button class="lightbox-detail" type="button" hidden>Ver detalhe da composição</button></dialog>
+    <script src="site-config.js"></script><script src="app.js" defer></script>
+  </body>
+</html>

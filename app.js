@@ -125,6 +125,10 @@
   }));
 
   const gallery = document.querySelector('#gallery');
+  const galleryNavigation = document.querySelector('#gallery-navigation');
+  const galleryPosition = document.querySelector('#gallery-position');
+  const previousWorkButton = document.querySelector('#gallery-previous');
+  const nextWorkButton = document.querySelector('#gallery-next');
   const savedGallery = document.querySelector('#saved-gallery');
   const galleryCount = document.querySelector('#gallery-count');
   const galleryEmpty = document.querySelector('#gallery-empty');
@@ -135,6 +139,7 @@
   const storageNote = document.querySelector('#storage-note');
   const filters = [...document.querySelectorAll('.filter-button')];
   let activeFilter = 'all';
+  let activeWorkId = portfolio[0].id;
   let storageAvailable = true;
   let savedIds = [];
 
@@ -198,12 +203,56 @@
       : portfolio.filter(work => work.categories.includes(activeFilter));
   }
 
+  function updateGalleryOrbit(works) {
+    const activeIndex = works.findIndex(work => work.id === activeWorkId);
+    const total = works.length;
+    if (!total) {
+      galleryPosition.textContent = '';
+      previousWorkButton.disabled = true;
+      nextWorkButton.disabled = true;
+      galleryNavigation.hidden = true;
+      return;
+    }
+
+    works.forEach((work, index) => {
+      let offset = (index - activeIndex + total) % total;
+      if (offset > total / 2) offset -= total;
+
+      const card = gallery.children[index];
+      const selected = offset === 0;
+      card.dataset.orbitPosition = String(offset);
+      card.setAttribute('aria-label', `${index + 1} de ${total}: ${work.title}`);
+      card.setAttribute('aria-hidden', String(!selected));
+      card.querySelector('.gallery-open').tabIndex = selected ? 0 : -1;
+      card.querySelector('.gallery-save').hidden = !selected;
+    });
+
+    galleryPosition.textContent = `${String(activeIndex + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
+    galleryPosition.setAttribute('aria-label', `Trabalho ${activeIndex + 1} de ${total}: ${works[activeIndex].title}`);
+    previousWorkButton.disabled = total < 2;
+    nextWorkButton.disabled = total < 2;
+    galleryNavigation.hidden = total === 0;
+  }
+
   function renderGallery() {
     const works = currentWorks();
+    if (!works.some(work => work.id === activeWorkId)) activeWorkId = works[0]?.id || '';
     gallery.replaceChildren(...works.map(work => makeCard(work)));
+    gallery.hidden = works.length === 0;
     galleryEmpty.hidden = works.length > 0;
     galleryCount.textContent = `${works.length} ${works.length === 1 ? 'trabalho' : 'trabalhos'}`;
+    updateGalleryOrbit(works);
     renderSaved();
+  }
+
+  function moveGallery(direction) {
+    const works = currentWorks();
+    if (works.length < 2) return;
+    const restoreCardFocus = gallery.contains(document.activeElement);
+    const index = works.findIndex(work => work.id === activeWorkId);
+    activeWorkId = works[(index + direction + works.length) % works.length].id;
+    updateGalleryOrbit(works);
+    if (restoreCardFocus) gallery.querySelector(`[data-work-id="${activeWorkId}"] .gallery-open`)?.focus();
   }
 
   function renderSaved() {
@@ -224,7 +273,15 @@
     renderGallery();
   }));
 
-  function toggleSaved(id) {
+  previousWorkButton.addEventListener('click', () => moveGallery(-1));
+  nextWorkButton.addEventListener('click', () => moveGallery(1));
+  gallery.addEventListener('keydown', event => {
+    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+    event.preventDefault();
+    moveGallery(event.key === 'ArrowRight' ? 1 : -1);
+  });
+
+  function toggleSaved(id, savedView = false) {
     savedIds = savedIds.includes(id)
       ? savedIds.filter(savedId => savedId !== id)
       : [...savedIds, id];
@@ -237,13 +294,17 @@
       storageNote.textContent = 'A coleção está disponível nesta visita, mas o navegador não conseguiu salvá-la para depois.';
     }
     renderGallery();
+    const restoredButton = savedView
+      ? savedGallery.querySelector(`[data-save-work="${id}"]`) || collectionToggle
+      : gallery.querySelector(`[data-save-work="${id}"]`);
+    restoredButton?.focus();
     if (!storageAvailable) storageNote.textContent = 'A coleção está disponível nesta visita, mas o navegador não conseguiu salvá-la para depois.';
   }
 
   document.addEventListener('click', event => {
     const saveButton = event.target.closest('[data-save-work]');
     if (saveButton) {
-      toggleSaved(saveButton.dataset.saveWork);
+      toggleSaved(saveButton.dataset.saveWork, Boolean(saveButton.closest('#saved-gallery')));
       return;
     }
     const openButton = event.target.closest('[data-open-work]');
@@ -293,6 +354,10 @@
     activeWorks = currentWorks();
     activeIndex = activeWorks.findIndex(work => work.id === id);
     if (activeIndex < 0) return;
+    if (gallery.querySelector(`[data-work-id="${id}"]`)) {
+      activeWorkId = id;
+      updateGalleryOrbit(activeWorks);
+    }
     setLightboxWork(activeWorks[activeIndex]);
     if (!dialog.open) dialog.showModal();
   }

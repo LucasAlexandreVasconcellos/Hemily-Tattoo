@@ -61,7 +61,12 @@
           <button class="filter-button" type="button" data-filter="lettering" aria-pressed="false">Lettering</button>
         </div>
         <div class="portfolio-tools"><p class="gallery-note" id="gallery-count" aria-live="polite"></p><button class="collection-toggle" id="collection-toggle" type="button" aria-expanded="false" aria-controls="saved-collection">Minha coleção <span id="saved-count">0</span></button></div>
-        <div class="gallery" id="gallery" aria-label="Trabalhos de Hemily Christie"></div>
+        <div class="gallery-navigation" id="gallery-navigation" role="group" aria-label="Navegar pelos trabalhos">
+          <p class="gallery-position" id="gallery-position" aria-live="polite"></p>
+          <button class="gallery-arrow" id="gallery-previous" type="button" aria-label="Ver trabalho anterior"><span aria-hidden="true">←</span></button>
+          <button class="gallery-arrow" id="gallery-next" type="button" aria-label="Ver próximo trabalho"><span aria-hidden="true">→</span></button>
+        </div>
+        <div class="gallery gallery-orbit" id="gallery" role="region" aria-roledescription="carrossel" aria-label="Trabalhos de Hemily Christie"></div>
         <p class="gallery-empty" id="gallery-empty" hidden>Nenhum trabalho nesta categoria. Escolha outro filtro para continuar.</p>
         <section class="saved-collection" id="saved-collection" aria-labelledby="saved-title" hidden>
           <div class="saved-heading"><div><p class="eyebrow">Referências que você guardou</p><h3 id="saved-title">Minha coleção</h3></div><button class="collection-close" id="collection-close" type="button">Fechar coleção</button></div>
@@ -69,7 +74,7 @@
           <div class="gallery saved-gallery" id="saved-gallery" aria-label="Trabalhos salvos"></div>
           <p class="storage-note" id="storage-note" role="status" aria-live="polite"></p>
         </section>
-        <p class="gallery-note gallery-instruction">Selecione uma peça para ampliar ou salvar na sua coleção.</p>
+        <p class="gallery-note gallery-instruction">Use as setas para percorrer as peças. Amplie a peça central ou guarde-a na sua coleção.</p>
       </section>
 
       <section class="styles section-light" aria-labelledby="styles-title">

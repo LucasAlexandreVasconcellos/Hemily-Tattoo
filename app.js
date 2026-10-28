@@ -110,17 +110,45 @@
     }
   ];
 
+  const localizedWorks = {
+    'en-US': {
+      'elefante-flores': ['Elephant with flowers', 'Fine-line elephant in a floral composition.', 'Fine-line elephant tattoo surrounded by flowers', 'Floral · Illustrative'],
+      'no-ordinary-love': ['No ordinary love', 'Delicate lettering along the back.', 'The phrase No ordinary love written along the back', 'Lettering'],
+      'lobo-flores': ['Wolf and flowers', 'Fine-line wolf portrait with flowers.', 'Fine-line wolf portrait accompanied by flowers', 'Floral · Illustrative'],
+      'figura-ornamental': ['Ornamental figure', 'Classical figure with ornaments, geometry, and lettering.', 'Blindfolded classical figure with ornaments, geometry, and lettering', 'Ornamental'],
+      'flor-geometrica': ['Flower and geometric axis', 'Fine-line flower crossed by a vertical axis.', 'Fine-line flower crossed by a vertical geometric axis', 'Floral · Ornamental'],
+      'pequeno-principe': ['The Little Prince', 'The Little Prince sitting on a planet with stars around him.', 'The Little Prince sitting on a planet with stars around him', 'Illustrative'],
+      'um-doce': ['A sweet one', 'Stylized face with sunglasses and lettering.', 'Small stylized face with sunglasses and the words um doce', 'Mini tattoo · Lettering'],
+      'composicao-floral': ['Floral composition', 'Detail of flowers in delicate lines and stippling.', 'Close-up of flowers tattooed in fine lines and stippling', 'Floral']
+    },
+    ja: {
+      'elefante-flores': ['花に囲まれた象', '花の構図に溶け込む繊細なラインの象。', '花に囲まれた繊細なラインの象のタトゥー', 'フローラル・イラスト'],
+      'no-ordinary-love': ['No ordinary love', '背中に沿って描かれた繊細なレタリング。', '背中に沿って書かれた No ordinary love の文字', 'レタリング'],
+      'lobo-flores': ['オオカミと花', '花を添えた繊細なラインのオオカミ。', '花を添えた繊細なラインのオオカミの肖像', 'フローラル・イラスト'],
+      'figura-ornamental': ['オーナメンタルの人物', '装飾や幾何学、文字を組み合わせた人物。', '目隠しをした人物に装飾や幾何学、文字を組み合わせた作品', 'オーナメンタル'],
+      'flor-geometrica': ['花と幾何学の軸', '縦の軸が通る繊細なラインの花。', '縦の幾何学軸が通る繊細なラインの花', 'フローラル・オーナメンタル'],
+      'pequeno-principe': ['星の王子さま', '星に囲まれた惑星に座る星の王子さま。', '星に囲まれた惑星に座る星の王子さま', 'イラスト'],
+      'um-doce': ['小さな甘い顔', 'サングラスと文字を添えた顔のイラスト。', 'サングラスと um doce の文字を添えた小さな顔', 'ミニタトゥー・レタリング'],
+      'composicao-floral': ['フローラルコンポジション', '繊細なラインと点描で描いた花のディテール。', '繊細なラインと点描で描いた花のクローズアップ', 'フローラル']
+    }
+  };
+  const tr = (pt, en, ja) => window.siteLocale?.() === 'en-US' ? en : window.siteLocale?.() === 'ja' ? ja : pt;
+  const localizedWork = work => {
+    const copy = localizedWorks[window.siteLocale?.()]?.[work.id];
+    return copy ? { ...work, title: copy[0], description: copy[1], alt: copy[2], categoryLabel: copy[3], detailAlt: work.detailAlt ? tr(work.detailAlt, 'Ornamental composition detail with geometric lines and lettering', '幾何学模様とレタリングのディテール') : undefined } : work;
+  };
+
   const menuButton = document.querySelector('.menu-toggle');
   const nav = document.querySelector('.site-nav');
   menuButton.addEventListener('click', () => {
     const open = menuButton.getAttribute('aria-expanded') === 'true';
     menuButton.setAttribute('aria-expanded', String(!open));
-    menuButton.setAttribute('aria-label', open ? 'Abrir menu' : 'Fechar menu');
+    menuButton.setAttribute('aria-label', open ? tr('Abrir menu', 'Open menu', 'メニューを開く') : tr('Fechar menu', 'Close menu', 'メニューを閉じる'));
     nav.classList.toggle('is-open', !open);
   });
   nav.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
     menuButton.setAttribute('aria-expanded', 'false');
-    menuButton.setAttribute('aria-label', 'Abrir menu');
+    menuButton.setAttribute('aria-label', tr('Abrir menu', 'Open menu', 'メニューを開く'));
     nav.classList.remove('is-open');
   }));
 
@@ -148,10 +176,11 @@
     if (Array.isArray(stored)) savedIds = stored.filter(id => portfolio.some(work => work.id === id));
   } catch {
     storageAvailable = false;
-    storageNote.textContent = 'O navegador não permitiu acessar a coleção salva.';
+    storageNote.textContent = tr('O navegador não permitiu acessar a coleção salva.', 'This browser could not access your saved collection.', '保存したコレクションにアクセスできませんでした。');
   }
 
   function makeCard(work, savedView = false) {
+    work = localizedWork(work);
     const article = document.createElement('article');
     article.className = `gallery-item ${work.layout}`;
     article.dataset.category = work.categories.join(' ');
@@ -159,7 +188,7 @@
     const openButton = document.createElement('button');
     openButton.className = 'gallery-open';
     openButton.type = 'button';
-    openButton.setAttribute('aria-label', `Ampliar tatuagem: ${work.title}`);
+    openButton.setAttribute('aria-label', `${tr('Ampliar tatuagem', 'Enlarge tattoo', 'タトゥーを拡大')}：${work.title}`);
     openButton.dataset.openWork = work.id;
     const image = document.createElement('img');
     image.src = imageRoot + work.image;
@@ -171,10 +200,10 @@
     image.addEventListener('error', () => {
       image.hidden = true;
       openButton.disabled = true;
-      openButton.setAttribute('aria-label', `Imagem indisponível: ${work.title}`);
+      openButton.setAttribute('aria-label', `${tr('Imagem indisponível', 'Image unavailable', '画像を表示できません')}: ${work.title}`);
       const unavailable = document.createElement('span');
       unavailable.className = 'gallery-image-error';
-      unavailable.textContent = 'Não foi possível carregar esta imagem.';
+      unavailable.textContent = tr('Não foi possível carregar esta imagem.', 'This image could not be loaded.', '画像を読み込めませんでした。');
       openButton.append(unavailable);
     }, { once: true });
     const caption = document.createElement('span');
@@ -190,8 +219,8 @@
     saveButton.type = 'button';
     saveButton.dataset.saveWork = work.id;
     saveButton.setAttribute('aria-pressed', String(isSaved));
-    saveButton.setAttribute('aria-label', `${isSaved ? 'Remover' : 'Salvar'} ${work.title} ${isSaved ? 'da' : 'na'} coleção`);
-    saveButton.textContent = savedView ? 'Remover' : isSaved ? 'Salvo' : 'Salvar';
+    saveButton.setAttribute('aria-label', `${isSaved ? tr('Remover', 'Remove', '削除') : tr('Salvar', 'Save', '保存')} ${work.title} ${tr('da coleção', 'from collection', 'お気に入りから')}`);
+    saveButton.textContent = savedView ? tr('Remover', 'Remove', '削除') : isSaved ? tr('Salvo', 'Saved', '保存済み') : tr('Salvar', 'Save', '保存');
     if (savedView) saveButton.classList.add('is-saved-view');
     article.append(openButton, saveButton);
     return article;
@@ -221,14 +250,14 @@
       const card = gallery.children[index];
       const selected = offset === 0;
       card.dataset.orbitPosition = String(offset);
-      card.setAttribute('aria-label', `${index + 1} de ${total}: ${work.title}`);
+      card.setAttribute('aria-label', `${index + 1} ${tr('de', 'of', '/') } ${total}: ${localizedWork(work).title}`);
       card.setAttribute('aria-hidden', String(!selected));
       card.querySelector('.gallery-open').tabIndex = selected ? 0 : -1;
       card.querySelector('.gallery-save').hidden = !selected;
     });
 
     galleryPosition.textContent = `${String(activeIndex + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
-    galleryPosition.setAttribute('aria-label', `Trabalho ${activeIndex + 1} de ${total}: ${works[activeIndex].title}`);
+    galleryPosition.setAttribute('aria-label', `${tr('Trabalho', 'Work', '作品')} ${activeIndex + 1} ${tr('de', 'of', '/') } ${total}: ${localizedWork(works[activeIndex]).title}`);
     previousWorkButton.disabled = total < 2;
     nextWorkButton.disabled = total < 2;
     galleryNavigation.hidden = total === 0;
@@ -240,7 +269,7 @@
     gallery.replaceChildren(...works.map(work => makeCard(work)));
     gallery.hidden = works.length === 0;
     galleryEmpty.hidden = works.length > 0;
-    galleryCount.textContent = `${works.length} ${works.length === 1 ? 'trabalho' : 'trabalhos'}`;
+    galleryCount.textContent = `${works.length} ${tr(works.length === 1 ? 'trabalho' : 'trabalhos', works.length === 1 ? 'piece' : 'pieces', works.length === 1 ? '作品' : '作品')}`;
     updateGalleryOrbit(works);
     renderSaved();
   }
@@ -335,13 +364,14 @@
   function setLightboxWork(work) {
     showingDetail = false;
     lightboxImage.src = imageRoot + work.image;
-    lightboxImage.alt = work.alt;
+    lightboxImage.alt = localizedWork(work).alt;
     lightboxImage.width = work.width;
     lightboxImage.height = work.height;
-    lightboxCaption.textContent = work.title;
-    lightboxDescription.textContent = work.description;
+    const copy = localizedWork(work);
+    lightboxCaption.textContent = copy.title;
+    lightboxDescription.textContent = copy.description;
     detailButton.hidden = !work.detail;
-    detailButton.textContent = 'Ver detalhe da composição';
+    detailButton.textContent = tr('Ver detalhe da composição', 'View composition detail', '構図のディテールを見る');
   }
 
   function showItem(index) {
@@ -370,10 +400,10 @@
     if (!work?.detail) return;
     showingDetail = !showingDetail;
     lightboxImage.src = imageRoot + (showingDetail ? work.detail : work.image);
-    lightboxImage.alt = showingDetail ? work.detailAlt : work.alt;
+    lightboxImage.alt = localizedWork(work)[showingDetail ? 'detailAlt' : 'alt'];
     lightboxImage.width = work.width;
     lightboxImage.height = work.height;
-    detailButton.textContent = showingDetail ? 'Voltar à composição' : 'Ver detalhe da composição';
+    detailButton.textContent = showingDetail ? tr('Voltar à composição', 'Back to full composition', '全体の構図に戻る') : tr('Ver detalhe da composição', 'View composition detail', '構図のディテールを見る');
   });
   dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
   document.addEventListener('keydown', event => {
@@ -418,7 +448,7 @@
   function formatDate(value) {
     if (!value) return '';
     const [year, month, day] = value.split('-');
-    return `${day}/${month}/${year}`;
+    return window.siteLocale?.() === 'en-US' ? `${month}/${day}/${year}` : window.siteLocale?.() === 'ja' ? `${year}/${month}/${day}` : `${day}/${month}/${year}`;
   }
 
   function formValues() {
@@ -430,13 +460,13 @@
   function renderSummary() {
     const values = formValues();
     const rows = [
-      ['Nome', values.name],
-      ['Telefone', values.phone],
-      ['Ideia', values.idea],
-      ['Local do corpo', values.bodyLocation],
-      ['Tamanho aproximado', values.size],
-      ['Estilo ou referência', values.style],
-      ['Data de preferência', values.date]
+      [tr('Nome', 'Name', 'お名前'), values.name],
+      [tr('Telefone', 'Phone', '電話番号'), values.phone],
+      [tr('Ideia', 'Idea', 'アイデア'), values.idea],
+      [tr('Local do corpo', 'Placement', '場所'), values.bodyLocation],
+      [tr('Tamanho aproximado', 'Approximate size', 'おおよそのサイズ'), values.size],
+      [tr('Estilo ou referência', 'Style or reference', 'スタイル・参考イメージ'), values.style],
+      [tr('Data de preferência', 'Preferred date', 'ご希望の日程'), values.date]
     ].filter(([, value]) => value);
     summary.replaceChildren();
     rows.forEach(([label, value]) => {
@@ -470,13 +500,13 @@
     }
     const values = formValues();
     const messageParts = [
-      `Olá! Meu nome é ${values.name}.`,
-      `Meu contato: ${values.phone}.`,
-      `Minha ideia: ${values.idea}.`,
-      values.bodyLocation && `Local do corpo: ${values.bodyLocation}.`,
-      values.size && `Tamanho aproximado: ${values.size}.`,
-      values.style && `Estilo/referência: ${values.style}.`,
-      values.date && `Data de preferência: ${values.date}.`
+      `${tr('Olá! Meu nome é', 'Hello! My name is', 'こんにちは。名前は')} ${values.name}.`,
+      `${tr('Meu contato', 'My contact number', '連絡先')}: ${values.phone}.`,
+      `${tr('Minha ideia', 'My idea', 'アイデア')}: ${values.idea}.`,
+      values.bodyLocation && `${tr('Local do corpo', 'Placement', '場所')}: ${values.bodyLocation}.`,
+      values.size && `${tr('Tamanho aproximado', 'Approximate size', 'おおよそのサイズ')}: ${values.size}.`,
+      values.style && `${tr('Estilo/referência', 'Style/reference', 'スタイル・参考イメージ')}: ${values.style}.`,
+      values.date && `${tr('Data de preferência', 'Preferred date', 'ご希望の日程')}: ${values.date}.`
     ].filter(Boolean);
     const message = messageParts.join('\n');
     const number = (config.whatsappNumber || '').replace(/\D/g, '');
@@ -485,13 +515,13 @@
       whatsappFallback.href = url;
       whatsappFallback.hidden = false;
       window.open(url, '_blank', 'noopener,noreferrer');
-      formStatus.textContent = 'A mensagem está pronta no WhatsApp. Revise e envie por lá. Se a nova aba não abriu, use o link abaixo.';
+      formStatus.textContent = tr('A mensagem está pronta no WhatsApp. Revise e envie por lá. Se a nova aba não abriu, use o link abaixo.', 'Your message is ready in WhatsApp. Review and send it there. If a new tab did not open, use the link below.', 'WhatsAppにメッセージを用意しました。内容を確認して送信してください。新しいタブが開かない場合は、下のリンクをご利用ください。');
       return;
     }
     if (navigator.share) {
       try {
         await navigator.share({ title: 'Pedido de orçamento, Hemily Christie Tattoo', text: message });
-        formStatus.textContent = 'Mensagem compartilhada. Nenhum dado foi enviado ao site.';
+        formStatus.textContent = tr('Mensagem compartilhada. Nenhum dado foi enviado ao site.', 'Message shared. No information was sent to this website.', 'メッセージを共有しました。ウェブサイトには情報を送信していません。');
         return;
       } catch (error) {
         if (error.name === 'AbortError') return;
@@ -499,15 +529,22 @@
     }
     try {
       await navigator.clipboard.writeText(message);
-      formStatus.textContent = 'Mensagem copiada. Cole-a no canal de contato para continuar a conversa.';
+      formStatus.textContent = tr('Mensagem copiada. Cole-a no canal de contato para continuar a conversa.', 'Message copied. Paste it into your preferred contact channel to continue.', 'メッセージをコピーしました。ご希望の連絡方法に貼り付けてください。');
     } catch {
-      formStatus.textContent = 'Não foi possível compartilhar ou copiar a mensagem neste navegador.';
+      formStatus.textContent = tr('Não foi possível compartilhar ou copiar a mensagem neste navegador.', 'This browser could not share or copy the message.', 'このブラウザーではメッセージを共有またはコピーできませんでした。');
     }
   });
 
   if (!config.whatsappNumber) {
-    document.querySelector('#form-help').textContent = 'Você revisará a mensagem antes de compartilhá-la. O canal oficial de contato ainda precisa ser configurado.';
+    document.querySelector('#form-help').textContent = tr('Você revisará a mensagem antes de compartilhá-la. O canal oficial de contato ainda precisa ser configurado.', 'You can review the message before sharing. The official contact channel still needs to be configured.', '共有前にメッセージを確認できます。公式の連絡先は現在設定中です。');
   }
   document.querySelector('#year').textContent = new Date().getFullYear();
   renderGallery();
+  window.addEventListener('site-language-change', () => {
+    renderGallery();
+    if (dialog.open && activeWorks[activeIndex]) setLightboxWork(activeWorks[activeIndex]);
+    if (activeStep === 2) renderSummary();
+    formStatus.textContent = '';
+    if (!config.whatsappNumber) document.querySelector('#form-help').textContent = tr('Você revisará a mensagem antes de compartilhá-la. O canal oficial de contato ainda precisa ser configurado.', 'You can review the message before sharing. The official contact channel still needs to be configured.', '共有前にメッセージを確認できます。公式の連絡先は現在設定中です。');
+  });
 })();

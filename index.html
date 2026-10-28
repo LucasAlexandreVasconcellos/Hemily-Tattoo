@@ -22,6 +22,20 @@
       <a class="wordmark" href="#topo" aria-label="Hemily Christie Tattoo, início">
         <span>Hemily Christie</span><small>TATTOO</small>
       </a>
+      <details class="language-picker" id="language-picker">
+        <span class="language-caption">Idioma</span>
+        <summary class="language-trigger" aria-controls="language-options">
+          <span class="language-current-flag"><span class="language-flag" aria-hidden="true">🇧🇷</span></span>
+          <span class="language-current-copy"><span class="language-name">Português (Brasil)</span><small class="language-current-code">PT</small></span>
+          <svg aria-hidden="true" viewBox="0 0 16 16"><path d="m4 6 4 4 4-4" /></svg>
+        </summary>
+        <div class="language-options" id="language-options" role="group" aria-label="Escolher idioma">
+          <div class="language-menu-head"><span class="language-monogram" aria-hidden="true">H</span><span>Escolha seu idioma</span></div>
+          <button type="button" data-language="pt-BR" aria-pressed="true"><span class="language-option-index" aria-hidden="true">01</span><span class="language-flag" aria-hidden="true">🇧🇷</span><span class="language-option-copy"><span lang="pt-BR">Português (Brasil)</span><small>BR · PT-BR</small></span><span class="language-check" aria-hidden="true">✓</span></button>
+          <button type="button" data-language="en-US" aria-pressed="false"><span class="language-option-index" aria-hidden="true">02</span><span class="language-flag" aria-hidden="true">🇺🇸</span><span class="language-option-copy"><span lang="en-US">English (US)</span><small>US · EN-US</small></span><span class="language-check" aria-hidden="true">✓</span></button>
+          <button type="button" data-language="ja" aria-pressed="false"><span class="language-option-index" aria-hidden="true">03</span><span class="language-flag" aria-hidden="true">🇯🇵</span><span class="language-option-copy"><span lang="ja">日本語</span><small>JP · JA</small></span><span class="language-check" aria-hidden="true">✓</span></button>
+        </div>
+      </details>
       <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Abrir menu"><span></span><span></span></button>
       <nav id="site-nav" class="site-nav" aria-label="Navegação principal">
         <a href="#portfolio">Portfólio</a><a href="#sobre">Sobre</a><a href="#processo">Processo</a><a href="#duvidas">Dúvidas</a><a class="nav-cta" href="#contato">Conversar</a>
@@ -34,7 +48,7 @@
           <p class="hero-kicker"><span class="kicker-mark"></span> Tatuagem autoral</p>
           <h1 id="hero-title">Uma história sua.<br /><em>Uma arte na pele.</em></h1>
           <p class="hero-intro">Ideias, símbolos e sentimentos encontram forma em uma tatuagem pensada para acompanhar você.</p>
-          <div class="hero-actions"><a class="button button-dark" href="#contato">Conversar sobre uma ideia <span aria-hidden="true">↗</span></a><a class="text-link" href="#portfolio">Explorar trabalhos <span aria-hidden="true">↓</span></a></div>
+          <div class="hero-actions"><a class="button button-dark" href="#contato">Vamos conversar sobre sua ideia <span aria-hidden="true">↗</span></a><a class="text-link" href="#portfolio">Explorar trabalhos <span aria-hidden="true">↓</span></a></div>
           <div class="hero-caption"><span>TRAÇO · FORMA · SIGNIFICADO</span><span class="caption-rule"></span><span>PORTFÓLIO AUTORAL</span></div>
         </div>
         <figure class="hero-art">
@@ -140,6 +154,6 @@
     <footer class="site-footer"><div class="footer-brand"><a class="wordmark wordmark-footer" href="#topo"><span>Hemily Christie</span><small>TATTOO</small></a><p>Uma história sua.<br /><em>Uma arte na pele.</em></p></div><nav class="footer-nav" aria-label="Links do rodapé"><a href="#portfolio">Portfólio</a><a href="#sobre">Sobre</a><a href="#processo">Processo</a><a href="#duvidas">Dúvidas</a></nav><a class="footer-contact" href="#contato">Vamos conversar <span aria-hidden="true">↗</span></a><div class="footer-bottom"><span>© <span id="year"></span> Hemily Christie Tattoo</span><span>Uma história sua, uma arte na pele.</span><a href="#topo">Voltar ao início ↑</a></div></footer>
 
     <dialog class="lightbox" id="lightbox" aria-label="Visualização ampliada da tatuagem"><button class="lightbox-close" type="button" aria-label="Fechar imagem">×</button><button class="lightbox-prev" type="button" aria-label="Imagem anterior">Imagem anterior</button><figure><img id="lightbox-image" alt="" width="1152" height="1536" /><figcaption id="lightbox-caption"></figcaption><p id="lightbox-description"></p></figure><button class="lightbox-next" type="button" aria-label="Próxima imagem">Próxima imagem</button><button class="lightbox-detail" type="button" hidden>Ver detalhe da composição</button></dialog>
-    <script src="site-config.js"></script><script src="app.js" defer></script>
+    <script src="site-config.js"></script><script src="i18n.js" defer></script><script src="app.js" defer></script>
   </body>
 </html>

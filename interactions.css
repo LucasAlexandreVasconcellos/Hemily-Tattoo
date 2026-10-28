@@ -521,6 +521,170 @@ a[href]:active {
   color: #705b54;
 }
 
+.language-picker {
+  position: relative;
+  flex: none;
+  margin-inline: clamp(.75rem, 2.8vw, 3rem);
+  color: var(--ink);
+}
+
+.language-caption {
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  margin: 0 0 .3rem .1rem;
+  color: #655c55;
+  font-size: .52rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.language-caption::before {
+  width: 1rem;
+  height: 1px;
+  background: var(--rose);
+  content: "";
+}
+
+.language-trigger {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr) 1rem;
+  align-items: center;
+  gap: .7rem;
+  min-width: 212px;
+  min-height: 58px;
+  border: 1px solid #8a8179;
+  padding: .45rem .7rem;
+  background: rgba(252, 250, 247, .68);
+  color: var(--ink);
+  font-size: .72rem;
+  cursor: pointer;
+  list-style: none;
+  text-align: left;
+  transition: background .18s ease, border-color .18s ease;
+}
+
+.language-trigger::-webkit-details-marker { display: none; }
+.language-trigger:hover,
+.language-picker[open] .language-trigger { background: var(--white); border-color: #70545a; }
+.language-current-flag {
+  display: grid;
+  width: 2.35rem;
+  height: 2.1rem;
+  place-items: center;
+  border: 1px solid rgba(25, 24, 23, .14);
+  background: #eee8e1;
+}
+.language-flag { display: grid; width: 100%; height: 100%; place-items: center; font-size: 1.3rem; line-height: 1; }
+.language-current-copy { display: flex; min-width: 0; flex-direction: column; gap: .12rem; }
+.language-name { overflow: hidden; font-family: var(--serif); font-size: .79rem; line-height: 1.25; text-overflow: ellipsis; white-space: nowrap; }
+.language-current-code { color: #70545a; font-size: .52rem; letter-spacing: .11em; line-height: 1.2; }
+.language-trigger svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.5; transition: transform .18s ease; }
+.language-picker[open] .language-trigger svg { transform: rotate(180deg); }
+
+.language-options {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + .45rem);
+  right: 0;
+  width: min(292px, calc(100vw - var(--gutter) - var(--gutter)));
+  padding: .45rem .6rem .55rem;
+  background: var(--white);
+  border: 1px solid #8a8179;
+  border-top: 2px solid var(--ink);
+  box-shadow: 0 10px 24px rgba(25, 24, 23, .12);
+}
+
+.language-menu-head {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  min-height: 3rem;
+  padding: .35rem .4rem .65rem;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--serif);
+  font-size: .98rem;
+}
+
+.language-monogram {
+  display: grid;
+  width: 1.85rem;
+  height: 1.85rem;
+  flex: none;
+  place-items: center;
+  border: 1px solid var(--rose);
+  border-radius: 50%;
+  color: #70545a;
+  font-size: 1rem;
+  font-style: italic;
+}
+
+.language-options button {
+  display: grid;
+  grid-template-columns: 1.2rem 2.35rem minmax(0, 1fr) 1rem;
+  align-items: center;
+  gap: .65rem;
+  width: 100%;
+  min-height: 68px;
+  border: 0;
+  border-bottom: 1px solid rgba(25, 24, 23, .1);
+  padding: .55rem .4rem;
+  background: transparent;
+  color: var(--ink);
+  text-align: left;
+  font-size: .74rem;
+  cursor: pointer;
+  transition: background .16s ease;
+}
+
+.language-options button:last-child { border-bottom: 0; }
+.language-option-index { color: #655c55; font-size: .55rem; letter-spacing: .04em; }
+.language-options button > .language-flag { width: 2.2rem; height: 1.75rem; border: 1px solid rgba(25, 24, 23, .13); background: var(--paper); font-size: 1.2rem; }
+.language-option-copy { display: flex; min-width: 0; flex-direction: column; gap: .16rem; }
+.language-option-copy > span { font-family: var(--serif); font-size: .83rem; line-height: 1.2; }
+.language-option-copy small { color: #655c55; font-size: .49rem; letter-spacing: .045em; line-height: 1.2; }
+.language-check { color: #70545a; opacity: 0; }
+.language-options button:hover,
+.language-options button:active { background: #f2ede7; box-shadow: inset 0 0 0 1px #8a8179; }
+.language-options button[aria-pressed="true"] { background: rgba(185, 147, 152, .18); }
+.language-options button[aria-pressed="true"] .language-check { opacity: 1; }
+
+.language-trigger:focus-visible,
+.language-options button:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}
+
+@keyframes language-menu-in {
+  from { opacity: 0; transform: translateY(-.25rem); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .language-picker[open] .language-options { animation: language-menu-in .16s ease-out both; }
+}
+
+.site-nav .nav-cta {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ink);
+  color: var(--white);
+  font-weight: 600;
+}
+
+.site-nav .nav-cta:hover {
+  background: #514943;
+  color: var(--white);
+}
+
+.hero-actions .button-dark {
+  min-height: 58px;
+  padding-inline: 1.35rem;
+  font-weight: 600;
+}
+
 .about-signature span {
   color: #5e5751;
 }
@@ -533,6 +697,19 @@ a[href]:active {
 }
 
 @media (max-width: 820px) {
+  .site-header {
+    gap: .75rem;
+  }
+
+  .language-picker {
+    margin-left: auto;
+    margin-right: 0;
+  }
+
+  .language-caption {
+    display: none;
+  }
+
   .site-header {
     height: 76px;
   }
@@ -603,7 +780,29 @@ a[href]:active {
   }
 }
 
+@media (max-width: 900px) and (min-width: 821px) {
+  .language-picker {
+    margin-inline: .5rem;
+  }
+
+  .language-trigger {
+    min-width: 198px;
+  }
+}
+
 @media (max-width: 680px) {
+  .language-trigger {
+    gap: .45rem;
+    min-width: 0;
+    padding-inline: .45rem;
+    font-size: .66rem;
+  }
+
+  .language-current-flag {
+    width: 2.1rem;
+    height: 1.9rem;
+  }
+
   .portfolio-tools {
     align-items: flex-start;
   }
@@ -691,6 +890,33 @@ a[href]:active {
 }
 
 @media (max-width: 440px) {
+  .wordmark span {
+    font-size: 1.03rem;
+  }
+
+  .language-picker {
+    margin-left: auto;
+  }
+
+  .language-options {
+    right: calc(-44px - .75rem);
+  }
+
+  .language-trigger {
+    grid-template-columns: 2.2rem 1.4rem 1rem;
+    gap: .35rem;
+    padding-inline: .35rem;
+  }
+
+  .language-name {
+    display: none;
+  }
+
+  .language-current-code {
+    font-size: .57rem;
+    font-weight: 600;
+  }
+
   .portfolio-tools {
     align-items: stretch;
     flex-direction: column;

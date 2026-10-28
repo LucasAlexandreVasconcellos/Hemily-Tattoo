@@ -9,6 +9,6 @@ Site institucional de uma página, construído sem dependências de build. Abra 
 - Revisar com Hemily os textos em primeira pessoa, categorias artísticas e orientações de atendimento antes da publicação.
 - Confirmar cidade/região, política de privacidade e dados para SEO local, se forem necessários.
 
-As nove imagens recebidas foram identificadas visualmente, renomeadas conforme o conteúdo e copiadas para `public/images/portfolio/`. O detalhe ornamental permanece associado à composição completa na galeria. A captura de referência não faz parte do site.
+As nove imagens de tatuagens recebidas foram identificadas visualmente, renomeadas conforme o conteúdo e copiadas para `public/images/portfolio/`. O detalhe ornamental permanece associado à composição completa na galeria. O retrato de Hemily Christie aparece na seção Sobre como identificação da tatuadora responsável pelo trabalho do estúdio.
 
 O portfólio e os filtros são gerados do catálogo em `app.js`. A coleção de inspirações fica no armazenamento local do navegador e pode ser apagada pelo visitante a qualquer momento.

@@ -135,12 +135,14 @@
           </fieldset>
           <fieldset class="form-step" data-step="1" hidden>
             <legend>Conte um pouco do que imaginou.</legend>
-            <div class="form-grid"><label class="form-wide">Sua ideia<textarea name="idea" rows="3" required placeholder="O que você gostaria de tatuar?"></textarea></label><label>Local do corpo<input name="bodyLocation" placeholder="Ex.: braço, costela" /></label><label>Tamanho aproximado<input name="size" placeholder="Ex.: 8 cm" /></label><label>Estilo ou referência<input name="style" placeholder="Ex.: floral, lettering" /></label><label>Data de preferência <small>(opcional)</small><input name="date" type="date" /></label></div>
+            <div class="form-grid"><label class="form-wide">Sua ideia<textarea name="idea" rows="3" required placeholder="O que você gostaria de tatuar?"></textarea></label><label>Local do corpo<input name="bodyLocation" placeholder="Ex.: braço, costela" /></label><label>Tamanho aproximado<input name="size" placeholder="Ex.: 8 cm" /></label><label>Estilo ou referência<input name="style" placeholder="Ex.: floral, lettering" /></label><label>Data de preferência <small>(opcional)</small><input name="date" type="date" /></label><label class="form-wide">Imagens do seu dispositivo<input id="device-images" name="deviceImages" type="file" accept="image/*" multiple /><small>As imagens serão compartilhadas pelo aparelho e não serão enviadas ao site.</small></label><label class="form-consent form-wide"><input id="translation-consent" name="translationConsent" type="checkbox" required /><span>Autorizo o envio das respostas escritas ao Google para tradução em português.</span></label></div>
             <div class="form-step-actions"><button class="button button-quiet step-back" type="button">Voltar</button><button class="button button-light step-next" type="button">Revisar pedido</button></div>
           </fieldset>
           <fieldset class="form-step" data-step="2" hidden>
             <legend>Revise antes de abrir o WhatsApp.</legend>
+            <p class="form-translation-note">A mensagem será preparada em português do Brasil. Confira a tradução antes de compartilhar.</p>
             <dl class="request-summary" id="request-summary"></dl>
+            <div class="reference-review"><h3>Referências anexadas</h3><ul class="reference-list" id="request-references" aria-label="Referências anexadas"></ul></div>
             <div class="form-step-actions"><button class="button button-quiet step-back" type="button">Voltar e editar</button><button class="button button-light" type="submit">Abrir WhatsApp para enviar <span aria-hidden="true">↗</span></button></div>
             <a class="whatsapp-fallback" id="whatsapp-fallback" target="_blank" rel="noopener noreferrer" hidden>Abrir a conversa no WhatsApp</a>
           </fieldset>

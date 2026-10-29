@@ -421,8 +421,14 @@
   const formSteps = [...form.querySelectorAll('.form-step')];
   const progressItems = [...form.querySelectorAll('.form-progress li')];
   const summary = document.querySelector('#request-summary');
+  const referenceList = document.querySelector('#request-references');
+  const imagePicker = document.querySelector('#device-images');
   const whatsappFallback = document.querySelector('#whatsapp-fallback');
   let activeStep = 0;
+  let referenceIds = null;
+  let selectedImages = [];
+  let portfolioFiles = new Map();
+  let portfolioFilesReady = true;
 
   function showStep(index) {
     activeStep = index;
@@ -448,13 +454,86 @@
   function formatDate(value) {
     if (!value) return '';
     const [year, month, day] = value.split('-');
-    return window.siteLocale?.() === 'en-US' ? `${month}/${day}/${year}` : window.siteLocale?.() === 'ja' ? `${year}/${month}/${day}` : `${day}/${month}/${year}`;
+    return `${day}/${month}/${year}`;
   }
 
   function formValues() {
     const values = Object.fromEntries(new FormData(form).entries());
+    delete values.deviceImages;
+    delete values.translationConsent;
     values.date = formatDate(values.date);
     return values;
+  }
+
+  async function translateFields(values) {
+    const response = await fetch('/api/translate-request', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idea: values.idea, bodyLocation: values.bodyLocation, size: values.size, style: values.style })
+    });
+    if (!response.ok) throw new Error('translation-failed');
+    const result = await response.json();
+    const fields = result.translations;
+    if (!fields || ['idea', 'bodyLocation', 'size', 'style'].some(key => values[key] && !fields[key]?.trim())) throw new Error('translation-failed');
+    return fields;
+  }
+
+  async function loadPortfolioFiles() {
+    const loaded = await Promise.all(referenceIds.map(async id => {
+      const work = portfolio.find(item => item.id === id);
+      if (!work) return { id, file: null };
+      try {
+        const response = await fetch(imageRoot + work.image);
+        if (!response.ok) return { id, file: null };
+        const blob = await response.blob();
+        return { id, file: new File([blob], work.image, { type: blob.type || 'image/webp' }) };
+      } catch { return { id, file: null }; }
+    }));
+    return { files: new Map(loaded.filter(item => item.file).map(item => [item.id, item.file])), ready: loaded.every(item => item.file) };
+  }
+
+  function renderReferences() {
+    referenceList.replaceChildren();
+    const references = referenceIds.map(id => ({ kind: 'portfolio', id, work: portfolio.find(item => item.id === id) })).filter(item => item.work);
+    const attachments = [...references, ...selectedImages.map((file, index) => ({ kind: 'device', file, index }))];
+    if (!attachments.length) {
+      const empty = document.createElement('li');
+      empty.className = 'reference-empty';
+      empty.textContent = tr('Nenhuma imagem selecionada.', 'No images selected.', '画像は選択されていません。');
+      referenceList.append(empty);
+      return;
+    }
+    attachments.forEach(item => {
+      const row = document.createElement('li');
+      const label = item.kind === 'portfolio' ? localizedWork(item.work).title : item.file.name;
+      if (item.kind === 'portfolio') {
+        const link = document.createElement('a');
+        link.href = imageRoot + item.work.image;
+        link.download = item.work.image;
+        link.textContent = label;
+        row.append(link);
+      } else {
+        const name = document.createElement('span');
+        name.textContent = label;
+        row.append(name);
+      }
+      const remove = document.createElement('button');
+      remove.type = 'button';
+      remove.className = 'reference-remove';
+      remove.textContent = tr('Remover', 'Remove', '削除');
+      remove.setAttribute('aria-label', `${tr('Remover referência', 'Remove reference', '参考画像を削除')}: ${label}`);
+      remove.addEventListener('click', () => {
+        if (item.kind === 'portfolio') {
+          referenceIds = referenceIds.filter(id => id !== item.id);
+          portfolioFiles.delete(item.id);
+          portfolioFilesReady = referenceIds.every(id => portfolioFiles.has(id));
+        }
+        else selectedImages.splice(item.index, 1);
+        renderReferences();
+      });
+      row.append(remove);
+      referenceList.append(row);
+    });
   }
 
   function renderSummary() {
@@ -462,10 +541,10 @@
     const rows = [
       [tr('Nome', 'Name', 'お名前'), values.name],
       [tr('Telefone', 'Phone', '電話番号'), values.phone],
-      [tr('Ideia', 'Idea', 'アイデア'), values.idea],
-      [tr('Local do corpo', 'Placement', '場所'), values.bodyLocation],
-      [tr('Tamanho aproximado', 'Approximate size', 'おおよそのサイズ'), values.size],
-      [tr('Estilo ou referência', 'Style or reference', 'スタイル・参考イメージ'), values.style],
+      [tr('Ideia', 'Idea', 'アイデア'), translatedFields.idea],
+      [tr('Local do corpo', 'Placement', '場所'), translatedFields.bodyLocation],
+      [tr('Tamanho aproximado', 'Approximate size', 'おおよそのサイズ'), translatedFields.size],
+      [tr('Estilo ou referência', 'Style or reference', 'スタイル・参考イメージ'), translatedFields.style],
       [tr('Data de preferência', 'Preferred date', 'ご希望の日程'), values.date]
     ].filter(([, value]) => value);
     summary.replaceChildren();
@@ -476,19 +555,48 @@
       detail.textContent = value;
       summary.append(term, detail);
     });
+    renderReferences();
   }
 
-  form.querySelectorAll('.step-next').forEach(button => button.addEventListener('click', () => {
+  form.querySelectorAll('.step-next').forEach(button => button.addEventListener('click', async () => {
     if (!validateStep(activeStep)) return;
-    if (activeStep === 1) renderSummary();
+    if (activeStep === 1) {
+      button.disabled = true;
+      formStatus.textContent = tr('Preparando a mensagem em português…', 'Preparing your message in Portuguese…', 'ポルトガル語のメッセージを準備しています…');
+      try {
+        const values = formValues();
+        translatedFields = await translateFields(values);
+        if (referenceIds === null) referenceIds = [...savedIds];
+        const loadedPortfolio = await loadPortfolioFiles();
+        portfolioFiles = loadedPortfolio.files;
+        portfolioFilesReady = loadedPortfolio.ready;
+        renderSummary();
+      } catch {
+        formStatus.textContent = tr('Não foi possível traduzir o pedido. Verifique sua conexão e tente novamente.', 'The request could not be translated. Check your connection and try again.', '依頼を翻訳できませんでした。接続を確認して、もう一度お試しください。');
+        button.disabled = false;
+        return;
+      }
+    }
     showStep(Math.min(activeStep + 1, formSteps.length - 1));
+    button.disabled = false;
     formSteps[activeStep].querySelector('input, textarea, button')?.focus();
   }));
   form.querySelectorAll('.step-back').forEach(button => button.addEventListener('click', () => {
     showStep(Math.max(activeStep - 1, 0));
     formSteps[activeStep].querySelector('input, textarea, button')?.focus();
   }));
+  let translatedFields = {};
   form.addEventListener('input', () => { formStatus.textContent = ''; });
+  imagePicker.addEventListener('change', () => {
+    const chosenFiles = [...imagePicker.files];
+    if (chosenFiles.some(file => file.type && !file.type.startsWith('image/'))) {
+      formStatus.textContent = tr('Escolha apenas arquivos de imagem.', 'Choose image files only.', '画像ファイルのみ選択してください。');
+    }
+    chosenFiles.filter(file => !file.type || file.type.startsWith('image/')).forEach(file => {
+      if (!selectedImages.some(existing => existing.name === file.name && existing.size === file.size && existing.lastModified === file.lastModified)) selectedImages.push(file);
+    });
+    imagePicker.value = '';
+  });
   form.addEventListener('submit', async event => {
     event.preventDefault();
     if (activeStep !== 2) return;
@@ -500,36 +608,42 @@
     }
     const values = formValues();
     const messageParts = [
-      `${tr('Olá! Meu nome é', 'Hello! My name is', 'こんにちは。名前は')} ${values.name}.`,
-      `${tr('Meu contato', 'My contact number', '連絡先')}: ${values.phone}.`,
-      `${tr('Minha ideia', 'My idea', 'アイデア')}: ${values.idea}.`,
-      values.bodyLocation && `${tr('Local do corpo', 'Placement', '場所')}: ${values.bodyLocation}.`,
-      values.size && `${tr('Tamanho aproximado', 'Approximate size', 'おおよそのサイズ')}: ${values.size}.`,
-      values.style && `${tr('Estilo/referência', 'Style/reference', 'スタイル・参考イメージ')}: ${values.style}.`,
-      values.date && `${tr('Data de preferência', 'Preferred date', 'ご希望の日程')}: ${values.date}.`
+      `Olá! Meu nome é ${values.name}.`,
+      `Meu contato: ${values.phone}.`,
+      `Minha ideia: ${translatedFields.idea}.`,
+      translatedFields.bodyLocation && `Local do corpo: ${translatedFields.bodyLocation}.`,
+      translatedFields.size && `Tamanho aproximado: ${translatedFields.size}.`,
+      translatedFields.style && `Estilo/referência: ${translatedFields.style}.`,
+      values.date && `Data de preferência: ${values.date}.`,
+      referenceIds.length && `Referências do portfólio: ${referenceIds.map(id => portfolio.find(work => work.id === id)?.title).filter(Boolean).join(', ')}.`,
+      selectedImages.length && `Imagens do dispositivo: ${selectedImages.map(file => file.name).join(', ')}.`
     ].filter(Boolean);
     const message = messageParts.join('\n');
     const number = (config.whatsappNumber || '').replace(/\D/g, '');
-    if (number) {
-      const url = `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
-      whatsappFallback.href = url;
-      whatsappFallback.hidden = false;
-      window.open(url, '_blank', 'noopener,noreferrer');
-      formStatus.textContent = tr('A mensagem está pronta no WhatsApp. Revise e envie por lá. Se a nova aba não abriu, use o link abaixo.', 'Your message is ready in WhatsApp. Review and send it there. If a new tab did not open, use the link below.', 'WhatsAppにメッセージを用意しました。内容を確認して送信してください。新しいタブが開かない場合は、下のリンクをご利用ください。');
-      return;
-    }
-    if (navigator.share) {
+    const url = number ? `https://wa.me/${number}?text=${encodeURIComponent(message)}` : '';
+    const files = [...referenceIds.map(id => portfolioFiles.get(id)).filter(Boolean), ...selectedImages];
+    let canShareFiles = false;
+    try { canShareFiles = Boolean(files.length && portfolioFilesReady && navigator.share && navigator.canShare?.({ files })); } catch {}
+    if (canShareFiles) {
       try {
-        await navigator.share({ title: 'Pedido de orçamento, Hemily Christie Tattoo', text: message });
-        formStatus.textContent = tr('Mensagem compartilhada. Nenhum dado foi enviado ao site.', 'Message shared. No information was sent to this website.', 'メッセージを共有しました。ウェブサイトには情報を送信していません。');
+        await navigator.share({ title: 'Pedido de orçamento, Hemily Christie Tattoo', text: message, files });
+        formStatus.textContent = tr('Conteúdo compartilhado. Escolha o WhatsApp e confira se abriu a conversa da Hemily.', 'Content shared. Choose WhatsApp and make sure Hemily’s chat is selected.', '共有しました。WhatsAppを選び、Hemilyとの会話を選択してください。');
         return;
       } catch (error) {
         if (error.name === 'AbortError') return;
+        formStatus.textContent = tr('Não foi possível compartilhar as imagens. Abra a conversa abaixo e anexe-as no WhatsApp.', 'The images could not be shared. Open the chat below and attach them in WhatsApp.', '画像を共有できませんでした。下のリンクからWhatsAppを開き、画像を添付してください。');
       }
+    }
+    if (number) {
+      whatsappFallback.href = url;
+      whatsappFallback.hidden = false;
+      window.open(url, '_blank', 'noopener,noreferrer');
+      if (!formStatus.textContent) formStatus.textContent = tr('O chat da tatuadora está pronto. Anexe as imagens no WhatsApp e envie o pedido.', 'The tattoo artist’s chat is ready. Attach the images in WhatsApp and send your request.', 'タトゥーアーティストとのチャットを開きました。WhatsAppで画像を添付し、依頼を送信してください。');
+      return;
     }
     try {
       await navigator.clipboard.writeText(message);
-      formStatus.textContent = tr('Mensagem copiada. Cole-a no canal de contato para continuar a conversa.', 'Message copied. Paste it into your preferred contact channel to continue.', 'メッセージをコピーしました。ご希望の連絡方法に貼り付けてください。');
+      formStatus.textContent = tr('Mensagem copiada. O canal da tatuadora precisa ser configurado para anexar imagens.', 'Message copied. The tattoo artist’s contact must be configured to send images.', 'メッセージをコピーしました。画像を送るにはタトゥーアーティストの連絡先設定が必要です。');
     } catch {
       formStatus.textContent = tr('Não foi possível compartilhar ou copiar a mensagem neste navegador.', 'This browser could not share or copy the message.', 'このブラウザーではメッセージを共有またはコピーできませんでした。');
     }

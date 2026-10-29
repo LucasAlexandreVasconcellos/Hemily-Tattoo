@@ -460,22 +460,8 @@
   function formValues() {
     const values = Object.fromEntries(new FormData(form).entries());
     delete values.deviceImages;
-    delete values.translationConsent;
     values.date = formatDate(values.date);
     return values;
-  }
-
-  async function translateFields(values) {
-    const response = await fetch('/api/translate-request', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ idea: values.idea, bodyLocation: values.bodyLocation, size: values.size, style: values.style })
-    });
-    if (!response.ok) throw new Error('translation-failed');
-    const result = await response.json();
-    const fields = result.translations;
-    if (!fields || ['idea', 'bodyLocation', 'size', 'style'].some(key => values[key] && !fields[key]?.trim())) throw new Error('translation-failed');
-    return fields;
   }
 
   async function loadPortfolioFiles() {
@@ -541,10 +527,10 @@
     const rows = [
       [tr('Nome', 'Name', 'お名前'), values.name],
       [tr('Telefone', 'Phone', '電話番号'), values.phone],
-      [tr('Ideia', 'Idea', 'アイデア'), translatedFields.idea],
-      [tr('Local do corpo', 'Placement', '場所'), translatedFields.bodyLocation],
-      [tr('Tamanho aproximado', 'Approximate size', 'おおよそのサイズ'), translatedFields.size],
-      [tr('Estilo ou referência', 'Style or reference', 'スタイル・参考イメージ'), translatedFields.style],
+      [tr('Ideia', 'Idea', 'アイデア'), values.idea],
+      [tr('Local do corpo', 'Placement', '場所'), values.bodyLocation],
+      [tr('Tamanho aproximado', 'Approximate size', 'おおよそのサイズ'), values.size],
+      [tr('Estilo ou referência', 'Style or reference', 'スタイル・参考イメージ'), values.style],
       [tr('Data de preferência', 'Preferred date', 'ご希望の日程'), values.date]
     ].filter(([, value]) => value);
     summary.replaceChildren();
@@ -561,31 +547,19 @@
   form.querySelectorAll('.step-next').forEach(button => button.addEventListener('click', async () => {
     if (!validateStep(activeStep)) return;
     if (activeStep === 1) {
-      button.disabled = true;
-      formStatus.textContent = tr('Preparando a mensagem em português…', 'Preparing your message in Portuguese…', 'ポルトガル語のメッセージを準備しています…');
-      try {
-        const values = formValues();
-        translatedFields = await translateFields(values);
-        if (referenceIds === null) referenceIds = [...savedIds];
-        const loadedPortfolio = await loadPortfolioFiles();
-        portfolioFiles = loadedPortfolio.files;
-        portfolioFilesReady = loadedPortfolio.ready;
-        renderSummary();
-      } catch {
-        formStatus.textContent = tr('Não foi possível traduzir o pedido. Verifique sua conexão e tente novamente.', 'The request could not be translated. Check your connection and try again.', '依頼を翻訳できませんでした。接続を確認して、もう一度お試しください。');
-        button.disabled = false;
-        return;
-      }
+      if (referenceIds === null) referenceIds = [...savedIds];
+      const loadedPortfolio = await loadPortfolioFiles();
+      portfolioFiles = loadedPortfolio.files;
+      portfolioFilesReady = loadedPortfolio.ready;
+      renderSummary();
     }
     showStep(Math.min(activeStep + 1, formSteps.length - 1));
-    button.disabled = false;
     formSteps[activeStep].querySelector('input, textarea, button')?.focus();
   }));
   form.querySelectorAll('.step-back').forEach(button => button.addEventListener('click', () => {
     showStep(Math.max(activeStep - 1, 0));
     formSteps[activeStep].querySelector('input, textarea, button')?.focus();
   }));
-  let translatedFields = {};
   form.addEventListener('input', () => { formStatus.textContent = ''; });
   imagePicker.addEventListener('change', () => {
     const chosenFiles = [...imagePicker.files];
@@ -610,10 +584,10 @@
     const messageParts = [
       `Olá! Meu nome é ${values.name}.`,
       `Meu contato: ${values.phone}.`,
-      `Minha ideia: ${translatedFields.idea}.`,
-      translatedFields.bodyLocation && `Local do corpo: ${translatedFields.bodyLocation}.`,
-      translatedFields.size && `Tamanho aproximado: ${translatedFields.size}.`,
-      translatedFields.style && `Estilo/referência: ${translatedFields.style}.`,
+      `Minha ideia: ${values.idea}.`,
+      values.bodyLocation && `Local do corpo: ${values.bodyLocation}.`,
+      values.size && `Tamanho aproximado: ${values.size}.`,
+      values.style && `Estilo/referência: ${values.style}.`,
       values.date && `Data de preferência: ${values.date}.`,
       referenceIds.length && `Referências do portfólio: ${referenceIds.map(id => portfolio.find(work => work.id === id)?.title).filter(Boolean).join(', ')}.`,
       selectedImages.length && `Imagens do dispositivo: ${selectedImages.map(file => file.name).join(', ')}.`

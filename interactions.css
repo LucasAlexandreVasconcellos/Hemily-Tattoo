@@ -409,23 +409,7 @@ a[href]:active {
   cursor: pointer;
 }
 
-.form-step .form-grid .form-consent {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: .65rem;
-  line-height: 1.6;
-}
-
-.form-consent input {
-  width: 1rem;
-  min-width: 1rem;
-  min-height: 1rem !important;
-  margin: .2rem 0 0;
-  accent-color: #c7b4a9;
-}
-
-.form-translation-note {
+.form-note {
   color: #d0c8c2;
   font-size: .75rem;
   line-height: 1.7;

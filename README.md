@@ -4,8 +4,7 @@ Site institucional de uma página, construído sem dependências de build. Abra 
 
 ## Antes de publicar
 
-- O número de WhatsApp informado já está configurado em `site-config.js`. O pedido é preparado no navegador; somente as respostas escritas são enviadas ao Google Cloud Translation após consentimento, e o site não armazena os dados do pedido nem as imagens.
-- Para habilitar a tradução, publique o projeto na Vercel, ative a Cloud Translation API no Google Cloud, crie uma chave restrita à API de tradução e configure `GOOGLE_TRANSLATE_API_KEY` nas variáveis de ambiente do projeto Vercel. Defina uma cota de uso no Google Cloud e publique novamente.
+- O número de WhatsApp informado já está configurado em `site-config.js`. O pedido é montado no navegador; o site não envia nem armazena os dados do pedido ou as imagens. Os rótulos da mensagem estão em português, mas respostas livres permanecem no idioma digitado.
 - O compartilhamento nativo de arquivos requer HTTPS e suporte do navegador. Se não estiver disponível, o formulário abre o chat da tatuadora e a pessoa anexa as imagens manualmente no WhatsApp.
 - Confirmar os links oficiais de Instagram e localização antes de acrescentá-los. O link curto de mapas fornecido não pôde ser resolvido durante a implementação, então nenhum endereço ou mapa foi inventado.
 - Revisar com Hemily os textos em primeira pessoa, categorias artísticas e orientações de atendimento antes da publicação.
